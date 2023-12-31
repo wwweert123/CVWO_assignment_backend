@@ -1,4 +1,4 @@
-class ForumThreadsController < ApplicationController
+class Api::V1::ForumThreadsController < ApplicationController
   before_action :set_forum_thread, only: %i[ show update destroy ]
 
   # GET /forum_threads
