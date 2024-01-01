@@ -18,7 +18,7 @@ class Api::V1::ForumThreadsController < ApplicationController
     @forum_thread = ForumThread.new(forum_thread_params)
 
     if @forum_thread.save
-      render json: @forum_thread, status: :created, location: @forum_thread
+      render json: @forum_thread, status: :created
     else
       render json: @forum_thread.errors, status: :unprocessable_entity
     end
