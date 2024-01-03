@@ -4,6 +4,7 @@ class CreateForumThreads < ActiveRecord::Migration[7.1]
       t.string :title
       t.string :description
       t.integer :upvotes
+      t.belongs_to :author, null: false, foreign_key: true
 
       t.timestamps
     end

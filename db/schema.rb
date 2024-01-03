@@ -10,13 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_01_065325) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_03_051527) do
+  create_table "authors", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "comments", force: :cascade do |t|
     t.string "text"
     t.string "author"
     t.integer "forum_thread_id", null: false
+    t.integer "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["forum_thread_id"], name: "index_comments_on_forum_thread_id"
   end
 
@@ -24,9 +32,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_01_065325) do
     t.string "title"
     t.string "description"
     t.integer "upvotes"
+    t.integer "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_forum_threads_on_author_id"
   end
 
+  add_foreign_key "comments", "authors"
   add_foreign_key "comments", "forum_threads"
+  add_foreign_key "forum_threads", "authors"
 end

@@ -4,6 +4,7 @@ class CreateComments < ActiveRecord::Migration[7.1]
       t.string :text
       t.string :author
       t.belongs_to :forum_thread, null: false, foreign_key: true
+      t.belongs_to :author, null: false, foreign_key: true
 
       t.timestamps
     end
