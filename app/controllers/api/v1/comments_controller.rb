@@ -46,6 +46,6 @@ class Api::V1::CommentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.require(:comment).permit(:text, :author, :forum_thread_id)
+      params.require(:comment).permit(:text, :author, :forum_thread_id, :author_id)
     end
 end
