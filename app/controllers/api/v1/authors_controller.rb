@@ -19,6 +19,9 @@ class Api::V1::AuthorsController < ApplicationController
 
     if @author.save
       render json: @author, status: :created, location: @author
+    elsif @author.errors.count == 1 && @author.errors[:name].first == "has already been taken"
+      foundAuthor = Author.find_by(name: params[:name])
+      render json: foundAuthor, status: :accepted
     else
       render json: @author.errors, status: :unprocessable_entity
     end
