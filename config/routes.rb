@@ -2,7 +2,13 @@ Rails.application.routes.draw do
   resources :authors
   namespace :api do
     namespace :v1 do 
-      resources :forum_threads
+      resources :forum_threads do
+        member do
+          get "likestatus" => "forum_threads#likestatus"
+          get "dislikestatus" => "forum_threads#dislikestatus"
+          put "like" => "forum_threads#like"
+        end
+      end
       resources :comments, only: [:create, :destroy]
       resources :authors
     end
