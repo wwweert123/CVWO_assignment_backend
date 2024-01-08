@@ -1,5 +1,5 @@
 class Api::V1::ForumThreadsController < ApplicationController
-  before_action :set_forum_thread, only: %i[ show update destroy like likestatus dislikestatus]
+  before_action :set_forum_thread, only: %i[ show update destroy like likestatus]
 
   # GET /forum_threads
   def index
@@ -39,15 +39,19 @@ class Api::V1::ForumThreadsController < ApplicationController
   end
 
   def likestatus
-    user = Author.find(params[:author_id])
-    liked = user.voted_up_on? @forum_thread
-    render json: {"liked": liked}, status: :accepted
-  end
-
-  def dislikestatus
-    user = Author.find(params[:author_id])
-    disliked = user.voted_down_on? @forum_thread
-    render json: {"disliked": disliked}, status: :accepted
+    data = {}
+    begin
+      user = Author.find(params[:author_id])
+    rescue
+      data["liked"] = false;
+      data["disliked"] = false;
+    else
+      data["liked"] = user.voted_up_on? @forum_thread
+      data["disliked"] = user.voted_down_on? @forum_thread
+    ensure
+      data["tally"] = @forum_thread.weighted_score
+    end
+    render json: data, status: :accepted
   end
 
   def like
