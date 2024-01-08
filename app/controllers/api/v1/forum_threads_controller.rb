@@ -49,7 +49,7 @@ class Api::V1::ForumThreadsController < ApplicationController
       data["liked"] = user.voted_up_on? @forum_thread
       data["disliked"] = user.voted_down_on? @forum_thread
     ensure
-      data["tally"] = @forum_thread.weighted_score
+      data["tally"] = @forum_thread.cached_weighted_score
     end
     render json: data, status: :accepted
   end
