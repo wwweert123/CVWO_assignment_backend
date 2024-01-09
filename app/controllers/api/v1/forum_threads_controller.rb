@@ -55,23 +55,33 @@ class Api::V1::ForumThreadsController < ApplicationController
   end
 
   def like
-    user = Author.find(params[:author_id])
-    if params[:user_action] == 'like'
-      @forum_thread.liked_by user
-      render json: @forum_thread, status: :accepted
-    elsif params[:user_action] == 'dislike'
-      @forum_thread.disliked_by user
-      render json: @forum_thread, status: :accepted
-    elsif params[:user_action] == 'unlike'
+    data = {}
+    begin
+      user = Author.find(params[:author_id])
+    rescue
+      data["error"] = "Can't find user" 
+      data["liked"] = false;
+      data["disliked"] = false;
+    else
+      if params[:user_action] == 'like'
+        @forum_thread.liked_by user
+        # render json: @forum_thread, status: :accepted
+      elsif params[:user_action] == 'dislike'
+        @forum_thread.disliked_by user
+        # render json: @forum_thread, status: :accepted
+      elsif params[:user_action] == 'unlike'
         @forum_thread.unliked_by user
-        render json: @forum_thread, status: :accepted
-    elsif params[:user_action] == 'undislike'
+        # render json: @forum_thread, status: :accepted
+      elsif params[:user_action] == 'undislike'
         @forum_thread.undisliked_by user
-        render json: @forum_thread, status: :accepted
-    else 
-        render json: "invalid action", status: :bad_request
+        # render json: @forum_thread, status: :accepted
+      end
+      data["liked"] = user.voted_up_on? @forum_thread
+      data["disliked"] = user.voted_down_on? @forum_thread
+    ensure
+      data["tally"] = @forum_thread.cached_weighted_score
     end
-    
+    render json: data, status: :accepted
   end
 
   private
