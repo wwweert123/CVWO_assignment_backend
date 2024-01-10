@@ -92,7 +92,7 @@ class Api::V1::ForumThreadsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def forum_thread_params
-      params.require(:forum_thread).permit(:title, :description, :author_id, :upvotes)
+      params.require(:forum_thread).permit(:title, :description, :author_id)
     end
 
     def options
