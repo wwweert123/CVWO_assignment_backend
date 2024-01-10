@@ -16,6 +16,9 @@ class Api::V1::ForumThreadsController < ApplicationController
   # POST /forum_threads
   def create
     @forum_thread = ForumThread.new(forum_thread_params)
+    if params[:tag].present?
+      @forum_thread.tag_list.add(params[:tag_list], parse: true)
+    end
 
     if @forum_thread.save
       render json: ForumThreadSerializer.new(@forum_thread).serialized_json, status: :created
@@ -92,7 +95,7 @@ class Api::V1::ForumThreadsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def forum_thread_params
-      params.require(:forum_thread).permit(:title, :description, :author_id)
+      params.require(:forum_thread).permit(:title, :description, :author_id, :tag_list)
     end
 
     def options
