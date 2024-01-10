@@ -1,5 +1,5 @@
 class Api::V1::CommentsController < ApplicationController
-  before_action :set_comment, only: %i[ destroy ]
+  before_action :set_comment, only: %i[ destroy like likestatus]
 
   # # GET /comments
   # def index
@@ -36,6 +36,52 @@ class Api::V1::CommentsController < ApplicationController
   # DELETE /comments/1
   def destroy
     @comment.destroy!
+  end
+
+  def likestatus
+    data = {}
+    begin
+      user = Author.find(params[:author_id])
+    rescue
+      data["liked"] = false;
+      data["disliked"] = false;
+    else
+      data["liked"] = user.voted_up_on? @comment
+      data["disliked"] = user.voted_down_on? @comment
+    ensure
+      data["tally"] = @comment.cached_weighted_score
+    end
+    render json: data, status: :accepted
+  end
+
+  def like
+    data = {}
+    begin
+      user = Author.find(params[:author_id])
+    rescue
+      data["error"] = "Can't find user" 
+      data["liked"] = false;
+      data["disliked"] = false;
+    else
+      if params[:user_action] == 'like'
+        @comment.liked_by user
+        # render json: @forum_thread, status: :accepted
+      elsif params[:user_action] == 'dislike'
+        @comment.disliked_by user
+        # render json: @forum_thread, status: :accepted
+      elsif params[:user_action] == 'unlike'
+        @comment.unliked_by user
+        # render json: @forum_thread, status: :accepted
+      elsif params[:user_action] == 'undislike'
+        @comment.undisliked_by user
+        # render json: @forum_thread, status: :accepted
+      end
+      data["liked"] = user.voted_up_on? @comment
+      data["disliked"] = user.voted_down_on? @comment
+    ensure
+      data["tally"] = @comment.cached_weighted_score
+    end
+    render json: data, status: :accepted
   end
 
   private

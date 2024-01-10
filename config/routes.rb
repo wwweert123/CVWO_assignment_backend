@@ -8,7 +8,12 @@ Rails.application.routes.draw do
           put "like" => "forum_threads#like"
         end
       end
-      resources :comments, only: [:create, :destroy]
+      resources :comments, only: [:create, :destroy] do
+        member do
+          get "likestatus" => "comments#likestatus"
+          put "like" => "comments#like"
+        end
+      end
       resources :authors
     end
   end
