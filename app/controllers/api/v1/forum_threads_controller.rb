@@ -3,8 +3,11 @@ class Api::V1::ForumThreadsController < ApplicationController
 
   # GET /forum_threads
   def index
-    @forum_threads = ForumThread.all
-
+    if params[:tag_topic]
+      @forum_threads = ForumThread.tagged_with(params[:tag_topic])
+    else
+      @forum_threads = ForumThread.all
+    end
     render json: ForumThreadSerializer.new(@forum_threads, options).serialized_json
   end
 
