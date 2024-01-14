@@ -4,9 +4,9 @@ class Api::V1::ForumThreadsController < ApplicationController
   # GET /forum_threads
   def index
     if params[:tag_topic]
-      @forum_threads = ForumThread.tagged_with(params[:tag_topic])
+      @forum_threads = ForumThread.tagged_with(params[:tag_topic]).order("#{params[:sort_by]}": :desc)
     else
-      @forum_threads = ForumThread.all
+      @forum_threads = ForumThread.all.order("#{params[:sort_by]}": :desc)
     end
     render json: ForumThreadSerializer.new(@forum_threads, options).serialized_json
   end
