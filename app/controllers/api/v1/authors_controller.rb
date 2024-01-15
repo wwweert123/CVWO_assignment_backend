@@ -13,6 +13,12 @@ class Api::V1::AuthorsController < ApplicationController
     render json: @author
   end
 
+  def forum_threads
+    @authors = Author.find(params[:id])
+    @forum_threads = @authors.forum_threads.order("#{params[:sort_by]}": :desc)
+    render json: ForumThreadSerializer.new(@forum_threads, options).serialized_json
+  end
+
   # POST /authors
   def create
     @author = Author.new(author_params)

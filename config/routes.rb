@@ -14,7 +14,11 @@ Rails.application.routes.draw do
           put "like" => "comments#like"
         end
       end
-      resources :authors
+      resources :authors do
+        member do
+          get :forum_threads
+        end
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
