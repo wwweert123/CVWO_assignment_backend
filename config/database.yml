@@ -79,11 +79,6 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
-# production:
-#     <<: *default
-#     database: cvwo_assignment_backend_production
-#     username: cvwo_assignment_backend
-#     password: <%= ENV["CVWO_ASSIGNMENT_BACKEND_DATABASE_PASSWORD"] %>
-
+#
 production:
     url: <%= ENV["MY_APP_DATABASE_URL"] %>
