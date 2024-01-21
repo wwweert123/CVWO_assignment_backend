@@ -3,5 +3,4 @@
 set -o errexit
 
 bundle install
-./bin/rails assets:clean
 ./bin/rails db:migrate
