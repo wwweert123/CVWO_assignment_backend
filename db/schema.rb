@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_01_10_161118) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "authors", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -20,8 +23,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_161118) do
   create_table "comments", force: :cascade do |t|
     t.string "text"
     t.string "author"
-    t.integer "forum_thread_id", null: false
-    t.integer "author_id", null: false
+    t.bigint "forum_thread_id", null: false
+    t.bigint "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "cached_votes_total", default: 0
@@ -39,7 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_161118) do
     t.string "title"
     t.string "description"
     t.string "author"
-    t.integer "author_id", null: false
+    t.bigint "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "cached_votes_total", default: 0
@@ -53,11 +56,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_161118) do
   end
 
   create_table "taggings", force: :cascade do |t|
-    t.integer "tag_id"
+    t.bigint "tag_id"
     t.string "taggable_type"
-    t.integer "taggable_id"
+    t.bigint "taggable_id"
     t.string "tagger_type"
-    t.integer "tagger_id"
+    t.bigint "tagger_id"
     t.string "context", limit: 128
     t.datetime "created_at", precision: nil
     t.string "tenant", limit: 128
@@ -85,9 +88,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_161118) do
 
   create_table "votes", force: :cascade do |t|
     t.string "votable_type"
-    t.integer "votable_id"
+    t.bigint "votable_id"
     t.string "voter_type"
-    t.integer "voter_id"
+    t.bigint "voter_id"
     t.boolean "vote_flag"
     t.string "vote_scope"
     t.integer "vote_weight"
