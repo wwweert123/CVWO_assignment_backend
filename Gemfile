@@ -7,8 +7,8 @@ gem "rails", "~> 7.1.2"
 
 gem "rack-cors"
 
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+# Use pg as the database for Active Record
+gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
