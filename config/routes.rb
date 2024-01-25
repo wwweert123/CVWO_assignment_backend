@@ -15,7 +15,7 @@ Rails.application.routes.draw do
         end
       end
       resources :authors do
-        member do
+        collection do
           get :forum_threads
           get :comments
         end

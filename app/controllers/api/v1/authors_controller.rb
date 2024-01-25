@@ -9,21 +9,21 @@ class Api::V1::AuthorsController < ApplicationController
     render json: AuthorSerializer.new(@authors, options).serialized_json
   end
 
-  # GET /authors/1
-  def show
-    render json: @author
-  end
-
   def forum_threads
-    @authors = Author.find(@author_id)
-    @forum_threads = @authors.forum_threads.order("#{params[:sort_by]}": :desc)
+    @author = Author.find(@author_id)
+    @forum_threads = @author.forum_threads.order("#{params[:sort_by]}": :desc)
     render json: ForumThreadSerializer.new(@forum_threads, options).serialized_json
   end
 
   def comments
-    @authors = Author.find(@author_id)
-    @comments = @authors.comments.order("#{params[:sort_by]}": :desc)
+    @author = Author.find(@author_id)
+    @comments = @author.comments.order("#{params[:sort_by]}": :desc)
     render json: CommentSerializer.new(@comments).serialized_json
+  end
+
+  # GET /authors/1
+  def show
+    render json: @author
   end
 
   # POST /authors
