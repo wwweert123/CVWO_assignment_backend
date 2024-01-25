@@ -79,6 +79,7 @@ GEM
       activerecord (>= 6.1, < 7.2)
     acts_as_votable (0.14.0)
     base64 (0.2.0)
+    bcrypt (3.1.20)
     bigdecimal (3.1.5)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
@@ -103,6 +104,7 @@ GEM
     irb (1.11.0)
       rdoc
       reline (>= 0.3.8)
+    jwt (2.7.1)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -202,9 +204,11 @@ PLATFORMS
 DEPENDENCIES
   acts-as-taggable-on
   acts_as_votable
+  bcrypt (~> 3.1.7)
   bootsnap
   debug
   fast_jsonapi
+  jwt
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors

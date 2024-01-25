@@ -27,13 +27,21 @@ class Api::V1::AuthorsController < ApplicationController
 
   # POST /authors
   def create
-    @author = Author.new(author_params)
+    @author = Author.new(name: request.headers[:name], password: request.headers[:password])
 
-    if @author.save
-      render json: @author, status: :created, location: @author
+    if @author.valid? && @author.save
+      payload = {user: @author.id}
+      token = JWT.encode(payload, 'okcool', "HS256")
+      render json: {token: token}, status: :created  
     elsif @author.errors.count == 1 && @author.errors[:name].first == "has already been taken"
-      foundAuthor = Author.find_by(name: params[:name])
-      render json: foundAuthor, status: :accepted
+      foundAuthor = Author.find_by(name: request.headers[:name])
+      if foundAuthor && foundAuthor.authenticate(request.headers[:password])
+        payload = {user: userFound.id}
+        token = JWT.encode(payload, 'okcool', 'HS256')
+        render json: {token: token}
+      else
+        render json: {error:"Failed, Password Incorrect"}, status: :unauthorized
+      end
     else
       render json: @author.errors, status: :unprocessable_entity
     end

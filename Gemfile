@@ -6,6 +6,8 @@ ruby "3.2.2"
 gem "rails", "~> 7.1.2"
 
 gem "rack-cors"
+gem 'bcrypt', '~> 3.1.7'
+gem 'jwt'
 
 # Use pg as the database for Active Record
 gem "pg", "~> 1.1"
