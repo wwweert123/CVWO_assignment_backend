@@ -1,6 +1,6 @@
 class Api::V1::CommentsController < ApplicationController
   before_action :set_comment, only: %i[ destroy like likestatus]
-  before_action :authorized, only: %i[create like likestatus]
+  before_action :authorized, only: %i[create like likestatus destroy]
 
   # # GET /comments
   # def index
@@ -36,7 +36,11 @@ class Api::V1::CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
-    @comment.destroy!
+    if @comment.author_id == @author_id
+      @comment.destroy!
+    else
+      render json: {error: "not allowed"}, status: :unauthorized
+    end
   end
 
   def likestatus

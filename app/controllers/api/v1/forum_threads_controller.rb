@@ -1,6 +1,6 @@
 class Api::V1::ForumThreadsController < ApplicationController
   before_action :set_forum_thread, only: %i[ show update destroy like likestatus]
-  before_action :authorized, only: %i[create like likestatus]
+  before_action :authorized, only: %i[create like likestatus destroy]
 
   # GET /forum_threads
   def index
@@ -42,7 +42,11 @@ class Api::V1::ForumThreadsController < ApplicationController
 
   # DELETE /forum_threads/1
   def destroy
-    @forum_thread.destroy!
+    if @forum_thread.author_id == @author_id
+      @forum_thread.destroy!
+    else
+      render json: {error: "not allowed"}, status: :unauthorized
+    end
   end
 
   def likestatus
