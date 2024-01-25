@@ -1,5 +1,6 @@
 class Api::V1::AuthorsController < ApplicationController
   before_action :set_author, only: %i[ show update destroy ]
+  before_action :authorized, only: %i[comments forum_threads]
 
   # GET /authors
   def index
@@ -14,20 +15,20 @@ class Api::V1::AuthorsController < ApplicationController
   end
 
   def forum_threads
-    @authors = Author.find(params[:id])
+    @authors = Author.find(@author_id)
     @forum_threads = @authors.forum_threads.order("#{params[:sort_by]}": :desc)
     render json: ForumThreadSerializer.new(@forum_threads, options).serialized_json
   end
 
   def comments
-    @authors = Author.find(params[:id])
+    @authors = Author.find(@author_id)
     @comments = @authors.comments.order("#{params[:sort_by]}": :desc)
     render json: CommentSerializer.new(@comments).serialized_json
   end
 
   # POST /authors
   def create
-    @author = Author.new(name: request.headers[:name], password: request.headers[:password])
+    @author = Author.new(name: params[:name], password: params[:password])
 
     if @author.valid? && @author.save
       payload = {user: @author.id}
@@ -69,7 +70,7 @@ class Api::V1::AuthorsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def author_params
-      params.require(:author).permit(:name)
+      params.require(:author).permit(:name, :password)
     end
 
     def options
