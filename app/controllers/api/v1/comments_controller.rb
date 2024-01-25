@@ -1,5 +1,6 @@
 class Api::V1::CommentsController < ApplicationController
   before_action :set_comment, only: %i[ destroy like likestatus]
+  before_action :authorized, only: %i[create like likestatus]
 
   # # GET /comments
   # def index
@@ -15,7 +16,7 @@ class Api::V1::CommentsController < ApplicationController
 
   # POST /comments
   def create
-    @comment = Comment.new(comment_params)
+    @comment = Comment.new(text: params[:text], forum_thread_id: params[:forum_thread_id], author_id: @author_id)
 
     if @comment.save
       render json: CommentSerializer.new(@comment).serialized_json, status: :created
@@ -41,7 +42,7 @@ class Api::V1::CommentsController < ApplicationController
   def likestatus
     data = {}
     begin
-      user = Author.find(params[:author_id])
+      user = Author.find(@author_id)
     rescue
       data["liked"] = false;
       data["disliked"] = false;
@@ -57,7 +58,7 @@ class Api::V1::CommentsController < ApplicationController
   def like
     data = {}
     begin
-      user = Author.find(params[:author_id])
+      user = Author.find(@author_id)
     rescue
       data["error"] = "Can't find user" 
       data["liked"] = false;
@@ -92,6 +93,6 @@ class Api::V1::CommentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.require(:comment).permit(:text, :author, :forum_thread_id, :author_id)
+      params.require(:comment).permit(:text, :forum_thread_id)
     end
 end
