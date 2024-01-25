@@ -28,6 +28,7 @@ class Api::V1::AuthorsController < ApplicationController
 
   # POST /authors
   def create
+    Rails.logger.debug params.inspect
     @author = Author.new(name: params[:name], password: params[:password])
 
     if @author.valid? && @author.save
@@ -35,7 +36,7 @@ class Api::V1::AuthorsController < ApplicationController
       token = JWT.encode(payload, 'okcool', "HS256")
       render json: {token: token}, status: :created  
     elsif @author.errors.count == 1 && @author.errors[:name].first == "has already been taken"
-      foundAuthor = Author.find_by(name: request.headers[:name])
+      foundAuthor = Author.find_by(name: params[:name])
       if foundAuthor && foundAuthor.authenticate(params[:password])
         payload = {user: foundAuthor.id}
         token = JWT.encode(payload, 'okcool', 'HS256')
