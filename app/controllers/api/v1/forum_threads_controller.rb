@@ -1,5 +1,6 @@
 class Api::V1::ForumThreadsController < ApplicationController
   before_action :set_forum_thread, only: %i[ show update destroy like likestatus]
+  before_action :authorized, only: %i[create like likestatus]
 
   # GET /forum_threads
   def index
@@ -18,7 +19,7 @@ class Api::V1::ForumThreadsController < ApplicationController
 
   # POST /forum_threads
   def create
-    @forum_thread = ForumThread.new(forum_thread_params)
+    @forum_thread = ForumThread.new(title: params[:title], description: params[:description], author_id: @author_id)
     if params[:tag].present?
       @forum_thread.tag_list.add(params[:tag_list], parse: true)
     end
@@ -47,7 +48,7 @@ class Api::V1::ForumThreadsController < ApplicationController
   def likestatus
     data = {}
     begin
-      user = Author.find(params[:author_id])
+      user = Author.find(@author_id)
     rescue
       data["liked"] = false;
       data["disliked"] = false;
@@ -63,7 +64,7 @@ class Api::V1::ForumThreadsController < ApplicationController
   def like
     data = {}
     begin
-      user = Author.find(params[:author_id])
+      user = Author.find(@author_id)
     rescue
       data["error"] = "Can't find user" 
       data["liked"] = false;
@@ -98,7 +99,7 @@ class Api::V1::ForumThreadsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def forum_thread_params
-      params.require(:forum_thread).permit(:title, :description, :author_id, :tag_list)
+      params.require(:forum_thread).permit(:title, :description, :tag_list)
     end
 
     def options
