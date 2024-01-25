@@ -36,7 +36,7 @@ class Api::V1::AuthorsController < ApplicationController
     elsif @author.errors.count == 1 && @author.errors[:name].first == "has already been taken"
       foundAuthor = Author.find_by(name: request.headers[:name])
       if foundAuthor && foundAuthor.authenticate(request.headers[:password])
-        payload = {user: userFound.id}
+        payload = {user: foundAuthor.id}
         token = JWT.encode(payload, 'okcool', 'HS256')
         render json: {token: token}
       else
